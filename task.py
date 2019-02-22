@@ -2,7 +2,11 @@ from mapReduce.map import Mapper
 from mapReduce.reduce import Reducer
 
 class Map(Mapper): 
-    pass
+    
+    def map(self):
+        pass
 
 class Reduce(Reducer):
-    pass
+    
+    def reduce(self):
+        pass

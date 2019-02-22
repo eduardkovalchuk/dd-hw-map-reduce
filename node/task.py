@@ -11,3 +11,6 @@ class Task(object):
         self.id_ = id_
         self.timestamp = timestamp
         self.content = content
+
+    def __repr__(self):
+        return self.__dict__

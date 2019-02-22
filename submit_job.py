@@ -13,14 +13,15 @@ try:
     file_ = open(args.file)
     exec(file_.read())
 except:
-    print('Invalid code file path or content')
+    raise Exception('Invalid code file path or content')
 
 try:
     map_ = Map()
 except:
-    print('Map is not implemented with method map')
+    raise Exception('Map is not implemented with method map')
 
 try:
     reduce_ = Reduce()
 except:
-    print('Reduce is not implemented with method reduce')
+    raise Exception('Reduce is not implemented with method reduce')
+
