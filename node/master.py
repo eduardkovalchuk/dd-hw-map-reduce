@@ -15,3 +15,5 @@ class Master(object):
 
     def register_slave(self, slave: Slave) -> self:
         self.slaves.append(slave)
+
+    # def submit_task()
