@@ -1,0 +1,4 @@
+NEW = "NEW"
+ACTIVE = "ACTIVE",
+STOP = "STOP",
+FAIL = "FAIL"
