@@ -1,0 +1,6 @@
+HEARTBEAT = ''
+SET_TASK = 'set/task'
+RUN_TASK = 'run/task'
+REPORT_START = 'report/start'
+REPORT_FINISH = 'report/finish'
+REPORT_FAIL = 'report/fail'

@@ -1,4 +1,4 @@
-NEW = "NEW"
-ACTIVE = "ACTIVE",
-STOP = "STOP",
-FAIL = "FAIL"
+NEW = 'NEW'
+ACTIVE = 'ACTIVE',
+STOP = 'STOP',
+FAIL = 'FAIL'
