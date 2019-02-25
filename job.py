@@ -3,7 +3,7 @@ from mapReduce.reduce import Reducer
 
 class Map(Mapper): 
     
-    def map(self):
+    def map(self, key, value):
         pass
 
 class Reduce(Reducer):
