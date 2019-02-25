@@ -48,6 +48,10 @@ class Node(object):
         except:
             return False
 
+    # def map(self, key, value):
+    #     exec(self.task.content)
+    #     return Map.map(key, value)
+
 
 # task = Task("some content")
 # node = Node()

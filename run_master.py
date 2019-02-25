@@ -26,7 +26,7 @@ def heartbeat():
 
 @route(REGISTER_SLAVE, method='POST')
 def register_slave():
-    # master.sync_cluster_data()
+    master.sync_cluster_data()
     data = request.json
     slave = master.register_slave(data['id_'], data['host'], data['port'], data['status'])
     print("\nSLAVE REGITERED AT: {}\n".format(slave.url))
@@ -37,6 +37,9 @@ def register_slave():
 def submit_task():
     task_content = request.json
     master.submit(task_content['task_content'])
+    print("\nTASK SUBMITED TO CLUSTER\n")
+    res = master.run_map_on_cluster()
+    print(res)
     response.status = 201
     return {"":""}
 

@@ -3,10 +3,14 @@ from mapReduce.reduce import Reducer
 
 class Map(Mapper): 
     
-    def map(self, key, value):
-        pass
+    @staticmethod
+    def map(key, value):
+        return (key*2, value*2)
 
 class Reduce(Reducer):
     
-    def reduce(self):
-        pass
+    @staticmethod
+    def reduce(key, values):
+        return key, reduce(lambda x,y: x + y, values)
+
+print("*"*200)

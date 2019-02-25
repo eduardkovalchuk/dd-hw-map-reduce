@@ -2,6 +2,8 @@ import pickle
 import uuid
 import requests
 from typing import List, Tuple, Hashable, Any, Iterable
+from multiprocessing.dummy import Pool
+import multiprocessing as mp
 
 from node.statuses import *
 from node.actions import *
@@ -33,15 +35,21 @@ class Master(Node):
                 self.status = FAIL
                 raise Exception('UNABLE TO SET TASK AT: {}'.format(slave.url))
 
-    def trigger_task(self) -> Task:
-        for slave in self.slaves:
-            run_task_url = slave.url + RUN_TASK
-            req = requests.get(run_task_url)
-            if req.status_code == 200:
-                return self.task
-            else:
-                self.status = FAIL
-                raise Exception(req.json())
+    def trigger_map(self, slave) -> List:
+        run_map_url = slave.url + RUN_MAP
+        req = requests.get(run_map_url)
+        if req.status_code == 200:
+            data = req.json()
+            result = data['map_result']
+            return result
+        else:
+            self.status = FAIL
+            raise Exception(req.json())
+    
+    def run_map_on_cluster(self) -> List:
+        pool = Pool(mp.cpu_count()*3)
+        map_result = pool.map(self.trigger_map, self.slaves)
+        return map_result
 
     def check_cluster_task(self) -> bool:
         res = True
@@ -57,6 +65,7 @@ class Master(Node):
         return res
     
     def sync_cluster_data(self):
+        updated = []
         for slave in self.slaves:
             fail_connection_msg = 'LOST CONNECTION TO SLAVE AT: {}'.format(slave.url)
             try:
@@ -64,10 +73,12 @@ class Master(Node):
                 if req.status_code == 200:
                     data = req.json()
                     slave.load_from_dict(data)
+                    updated.append(slave)
                 else:
                     print(fail_connection_msg)
             except:
                 print(fail_connection_msg)
+        self.slaves = updated
         return self
 
     
@@ -120,7 +131,9 @@ class Slave(Node):
     def do_map(self, path):
         if self.task is None:
             raise Exception("Task is not set")
-        data = self.load_data(path)
-        unzipped = list(zip(*data))
-        return list(map(Map.map, unzipped))
+        else:
+            exec(self.task.content)
+            data = self.load_data(path)
+            unzipped = list(zip(*data))
+            return list(map(Map.map, unzipped))
     
