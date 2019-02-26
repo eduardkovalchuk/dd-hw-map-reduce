@@ -25,7 +25,7 @@ class Node(object):
     
     def __repr__(self):
         if self.task:
-            task = self.task.__dict__
+            task = self.task.__repr__()
         else:
             task = None
         return {
@@ -41,7 +41,6 @@ class Node(object):
 
     def set_task(self, task: str, id_: str=uuid.uuid1().hex, timestamp: str=dt.now().isoformat()) -> bool:
         try:
-            exec(task)
             obj = Task(task, id_=id_, timestamp=timestamp)
             self.task = obj
             return True

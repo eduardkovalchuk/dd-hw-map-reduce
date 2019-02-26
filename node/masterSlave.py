@@ -132,8 +132,9 @@ class Slave(Node):
         if self.task is None:
             raise Exception("Task is not set")
         else:
-            exec(self.task.content)
             data = self.load_data(path)
             unzipped = list(zip(*data))
-            return list(map(Map.map, unzipped))
+            keys = unzipped[0]
+            values = unzipped[1]
+            return list(map(self.task.map_cls.map, keys, values))
     

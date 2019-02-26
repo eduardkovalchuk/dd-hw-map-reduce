@@ -43,6 +43,6 @@ def set_task():
 @route(RUN_MAP)
 def run_map():
     result = slave.do_map(DATA_PATH)
-    return result
+    return { 'map_result': dict(result) }
 
 run(host=slave.host, port=slave.port)

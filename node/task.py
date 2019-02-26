@@ -1,4 +1,5 @@
 import uuid
+from copy import copy
 from datetime import datetime as dt
 
 class Task(object):
@@ -12,5 +13,13 @@ class Task(object):
         self.timestamp = timestamp
         self.content = content
 
+        # extract Map and Reduce classes
+        exec(content)
+        self.map_cls = locals()['Map']
+        self.reduce_cls = locals()['Reduce']
+
     def __repr__(self):
-        return self.__dict__
+        dic = copy(self.__dict__)
+        dic.pop('map_cls')
+        dic.pop('reduce_cls')
+        return dic
