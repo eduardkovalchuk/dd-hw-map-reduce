@@ -43,6 +43,12 @@ def set_task():
 @route(RUN_MAP)
 def run_map():
     result = slave.do_map(DATA_PATH)
-    return { 'map_result': dict(result) }
+    return { 'map_result': result }
+
+@route(DATA, method=['GET', 'POST'])
+def data():
+    if request.method == 'POST':
+        slave.save_data(DATA_PATH, request.json)
+    return json.dumps(slave.load_data(DATA_PATH))
 
 run(host=slave.host, port=slave.port)

@@ -25,15 +25,10 @@ try:
 except:
     raise Exception('class Map is not implemented with method map OR class' 
                     'Reduce is not implemented with method reduce')
-# try:
-#     req = requests.post(SUBMIT_TASK_URL, json={'task_content':job_content})
-#     if req.status_code != 201:
-#         raise Exception('Unable to submit task!')
-#     print('TASK HAS BEEN SUBMITED')
-# except:
-#     raise Exception('Cannot connect to master, is it running at: {} ?'.format(MASTER_URL))
 
 req = requests.post(SUBMIT_TASK_URL, json={'task_content':job_content})
 if req.status_code != 201:
     raise Exception('Unable to submit task!')
-print('TASK HAS BEEN SUBMITED')
+
+print('\nTASK HAS BEEN SUBMITED\n')
+print(req.json())

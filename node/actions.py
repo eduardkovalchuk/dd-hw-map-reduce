@@ -1,4 +1,5 @@
 HEARTBEAT = '/'
+DATA = '/data'
 REGISTER_SLAVE = '/register/slave'
 SET_TASK = '/set/task'
 SUBMIT_TASK = '/submit/task'

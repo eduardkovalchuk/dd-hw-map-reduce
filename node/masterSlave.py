@@ -1,6 +1,8 @@
 import pickle
 import uuid
+import functools as ft
 import requests
+import os
 from typing import List, Tuple, Hashable, Any, Iterable
 from multiprocessing.dummy import Pool
 import multiprocessing as mp
@@ -87,7 +89,28 @@ class Master(Node):
         self.sync_cluster_data()
         self.send_task()
         return self
+    
+    def flatten(self, map_result: Iterable[Iterable]) -> Iterable:
+        return ft.reduce(lambda x,y: x + y, map_result)
 
+    def group_by_key(self, to_group: Iterable) -> Iterable:
+        flat = self.flatten(to_group)
+        
+        keys = dict(flat).keys()
+        result = dict([(k, []) for k in keys])
+
+        for k, v in flat:
+            result[k].append(v)
+
+        return result.items()
+
+    def do_reduce(self, grouped_by_key: Iterable) -> Iterable:
+        if self.task is None:
+            raise Exception("Task is not set")
+        
+        keys, values = self.unzip(grouped_by_key)
+        result = map(self.task.reduce_cls.reduce, keys, values)
+        return dict(result)
 
 class Slave(Node):
 
@@ -124,6 +147,8 @@ class Slave(Node):
         return loaded
 
     def save_data(self, path: str, data: Iterable) -> 'Slave':
+        if os.path.exists(path):
+            os.remove(path)
         with open(path, 'wb') as to_save:
             pickle.dump(data, to_save, pickle.HIGHEST_PROTOCOL)
         return self
@@ -131,10 +156,9 @@ class Slave(Node):
     def do_map(self, path):
         if self.task is None:
             raise Exception("Task is not set")
-        else:
-            data = self.load_data(path)
-            unzipped = list(zip(*data))
-            keys = unzipped[0]
-            values = unzipped[1]
-            return list(map(self.task.map_cls.map, keys, values))
-    
+        
+        data = self.load_data(path)
+        keys, values = self.unzip(data)
+
+        result = map(self.task.map_cls.map, keys, values)
+        return [list(el) for el in result]

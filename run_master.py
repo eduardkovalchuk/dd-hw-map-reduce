@@ -38,9 +38,16 @@ def submit_task():
     task_content = request.json
     master.submit(task_content['task_content'])
     print("\nTASK SUBMITED TO CLUSTER\n")
-    res = master.run_map_on_cluster()
-    print(res)
+
+    map_res = master.run_map_on_cluster()
+    grouped_by_key = master.group_by_key(map_res)
+    reduced = master.do_reduce(grouped_by_key)
+    
+    print('\nMAP RESULT: {}\n'.format(map_res))
+    print('\nGROUP BY KEY RESULT: {}\n'.format(grouped_by_key))
+    print('\nREDUCE RESULT: {}\n'.format(reduced))
+
     response.status = 201
-    return {"":""}
+    return {"map_reduce_result": reduced}
 
 run(host=master.host, port=master.port)

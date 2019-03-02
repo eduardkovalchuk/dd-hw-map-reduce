@@ -47,18 +47,7 @@ class Node(object):
         except:
             return False
 
-    # def map(self, key, value):
-    #     exec(self.task.content)
-    #     return Map.map(key, value)
-
-
-# task = Task("some content")
-# node = Node()
-# node.id_ = uuid.uuid1().hex
-# node.host = 'localhost'
-# node.port = 1234
-# node.task = task
-
-# print(node.__repr__())
-# print(task.__repr__())
-
+    @staticmethod
+    def unzip(list_of_pairs) -> Tuple[Iterable, Iterable]:
+        unzipped = list(zip(*list_of_pairs))
+        return unzipped[0], unzipped[1]
